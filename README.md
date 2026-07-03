@@ -38,6 +38,17 @@ Send a message bubble and play an animation:
 ./bin/petshell-notify --state wave "DHH online"
 ```
 
+Send an opinionated Omarchy/desktop event:
+
+```bash
+./bin/petshell-omarchy-event keybindings
+./bin/petshell-omarchy-event screenshot
+./bin/petshell-omarchy-event recording-start
+./bin/petshell-omarchy-event recording-stop
+./bin/petshell-omarchy-event update
+./bin/petshell-omarchy-event launcher
+```
+
 Available states:
 
 ```text
@@ -110,4 +121,3 @@ Rebuild the hybrid:
 ## Git Hygiene
 
 `references/` is ignored because it contains bulky generation inputs, prompts, decoded frames, and QA intermediates. Runtime pet assets live under `pets/` and are tracked.
-

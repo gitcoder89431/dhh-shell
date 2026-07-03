@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+notify="$script_dir/petshell-notify"
+
+usage() {
+  cat >&2 <<'EOF'
+usage: petshell-omarchy-event EVENT
+
+events:
+  keybindings
+  screenshot
+  recording-start
+  recording-stop
+  update
+  launcher
+EOF
+}
+
+event="${1:-}"
+case "$event" in
+  keybindings)
+    "$notify" --state review --duration 1800 "Every shortcut is a command waiting to happen."
+    ;;
+  screenshot)
+    "$notify" --state wave --duration 1600 "Proof or it didn't happen."
+    ;;
+  recording-start)
+    "$notify" --state coding --duration 1800 "Rolling tape. Make it worth the pixels."
+    ;;
+  recording-stop)
+    "$notify" --state jump --duration 1600 "Cut. Ship the clip."
+    ;;
+  update)
+    "$notify" --state thinking --duration 2000 "Ship small, upgrade often."
+    ;;
+  launcher)
+    "$notify" --state wave --duration 1400 "Summon the tools."
+    ;;
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  *)
+    usage
+    exit 1
+    ;;
+esac
