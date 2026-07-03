@@ -171,6 +171,7 @@ ShellRoot {
             property string systemSummary: ""
             property string systemRule: "default"
             property int handledEventId: 0
+            property int bubbleMaxWidth: Math.max(180, Math.min(360, width - 32))
 
             function clampPet() {
                 petHitbox.x = Math.max(0, Math.min(width - petWidth, petHitbox.x));
@@ -338,12 +339,11 @@ ShellRoot {
 
                 Rectangle {
                     visible: petWindow.bubbleText.length > 0
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottom: parent.top
-                    anchors.bottomMargin: -6
-                    width: bubbleLabel.implicitWidth + 22
-                    height: 30
-                    radius: 13
+                    x: Math.max(12 - petHitbox.x, Math.min((petWindow.width - width - 12) - petHitbox.x, (petHitbox.width - width) / 2))
+                    y: -height + 6
+                    width: Math.min(petWindow.bubbleMaxWidth, Math.max(150, bubbleLabel.implicitWidth + 24))
+                    height: bubbleLabel.implicitHeight + 16
+                    radius: 14
                     color: Qt.rgba(0.07, 0.07, 0.10, 0.92)
                     border.width: 1
                     border.color: Qt.rgba(1, 1, 1, 0.10)
@@ -351,11 +351,15 @@ ShellRoot {
                     Text {
                         id: bubbleLabel
                         anchors.centerIn: parent
+                        width: parent.width - 24
                         text: petWindow.bubbleText
                         color: "#f5e0dc"
                         font.family: "JetBrainsMono Nerd Font"
                         font.pixelSize: 11
                         font.weight: Font.Bold
+                        horizontalAlignment: Text.AlignHCenter
+                        lineHeight: 1.12
+                        wrapMode: Text.WordWrap
                     }
                 }
 
