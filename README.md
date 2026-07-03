@@ -50,8 +50,23 @@ Send an opinionated Omarchy/desktop event:
 ./bin/petshell-omarchy-event theme-menu
 ./bin/petshell-omarchy-event background-menu
 ./bin/petshell-omarchy-event update
+./bin/petshell-omarchy-event update-done
+./bin/petshell-omarchy-event theme-set mocha_v2
+./bin/petshell-omarchy-event font-set "TX-02"
+./bin/petshell-omarchy-event battery-low 17
+./bin/petshell-omarchy-event post-boot
 ./bin/petshell-omarchy-event launcher
 ./bin/petshell-omarchy-event activity
+```
+
+Useful Omarchy hooks for automatic commentary:
+
+```text
+~/.config/omarchy/hooks/post-update.d/petshell-commentary
+~/.config/omarchy/hooks/theme-set.d/petshell-commentary
+~/.config/omarchy/hooks/font-set.d/petshell-commentary
+~/.config/omarchy/hooks/battery-low.d/petshell-commentary
+~/.config/omarchy/hooks/post-boot.d/petshell-commentary
 ```
 
 Available states:

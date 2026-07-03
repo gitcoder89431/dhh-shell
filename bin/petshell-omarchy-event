@@ -18,6 +18,11 @@ events:
   theme-menu
   background-menu
   update
+  update-done
+  theme-set [theme-name]
+  font-set [font-name]
+  battery-low [percent]
+  post-boot
   launcher
   activity
 EOF
@@ -51,6 +56,24 @@ case "$event" in
     ;;
   update)
     "$notify" --state thinking --duration 2000 "Ship small, upgrade often."
+    ;;
+  update-done)
+    "$notify" --state jump --duration 2400 "The machine has been sharpened. Reboot only if the gods demand it."
+    ;;
+  theme-set)
+    theme="${2:-new_theme}"
+    "$notify" --state review --duration 2200 "New robe: ${theme}. Same shell, sharper opinions."
+    ;;
+  font-set)
+    font="${2:-monospace}"
+    "$notify" --state wave --duration 2000 "Typography is infrastructure. ${font} enters the chat."
+    ;;
+  battery-low)
+    percent="${2:-low}"
+    "$notify" --state sad --duration 2600 "Battery at ${percent}%. Even Unix prophets need electrons."
+    ;;
+  post-boot)
+    "$notify" --state wave --duration 2200 "Boot complete. The daemon is awake."
     ;;
   launcher)
     "$notify" --state wave --duration 1400 "Summon the tools."
