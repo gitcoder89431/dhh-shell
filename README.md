@@ -43,10 +43,15 @@ Send an opinionated Omarchy/desktop event:
 ```bash
 ./bin/petshell-omarchy-event keybindings
 ./bin/petshell-omarchy-event screenshot
+./bin/petshell-omarchy-event capture-menu
 ./bin/petshell-omarchy-event recording-start
 ./bin/petshell-omarchy-event recording-stop
+./bin/petshell-omarchy-event system-menu
+./bin/petshell-omarchy-event theme-menu
+./bin/petshell-omarchy-event background-menu
 ./bin/petshell-omarchy-event update
 ./bin/petshell-omarchy-event launcher
+./bin/petshell-omarchy-event activity
 ```
 
 Available states:

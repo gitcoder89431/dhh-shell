@@ -11,10 +11,15 @@ usage: petshell-omarchy-event EVENT
 events:
   keybindings
   screenshot
+  capture-menu
   recording-start
   recording-stop
+  system-menu
+  theme-menu
+  background-menu
   update
   launcher
+  activity
 EOF
 }
 
@@ -26,17 +31,32 @@ case "$event" in
   screenshot)
     "$notify" --state wave --duration 1600 "Proof or it didn't happen."
     ;;
+  capture-menu)
+    "$notify" --state review --duration 1600 "Screenshots, recordings, receipts."
+    ;;
   recording-start)
     "$notify" --state coding --duration 1800 "Rolling tape. Make it worth the pixels."
     ;;
   recording-stop)
     "$notify" --state jump --duration 1600 "Cut. Ship the clip."
     ;;
+  system-menu)
+    "$notify" --state thinking --duration 1700 "Power is a menu. Use it wisely."
+    ;;
+  theme-menu)
+    "$notify" --state review --duration 1700 "Taste is configuration."
+    ;;
+  background-menu)
+    "$notify" --state wave --duration 1600 "Set the mood, then ship."
+    ;;
   update)
     "$notify" --state thinking --duration 2000 "Ship small, upgrade often."
     ;;
   launcher)
     "$notify" --state wave --duration 1400 "Summon the tools."
+    ;;
+  activity)
+    "$notify" --state thinking --duration 1700 "Measure first. Panic later."
     ;;
   -h|--help)
     usage
