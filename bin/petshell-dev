@@ -3,5 +3,10 @@ set -euo pipefail
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd -- "$script_dir/.." && pwd)"
+runtime_dir="$repo_root/.cache"
+runtime_qml="$runtime_dir/shell.qml"
 
-exec qs -n -p "$repo_root/qml/shell.qml"
+mkdir -p "$runtime_dir"
+sed "s|@PETSHELL_ROOT@|$repo_root|g" "$repo_root/qml/shell.qml" > "$runtime_qml"
+
+exec qs -n -p "$runtime_qml"

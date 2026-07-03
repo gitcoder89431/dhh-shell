@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+autostart="${XDG_CONFIG_HOME:-$HOME/.config}/hypr/autostart.conf"
+begin="# >>> petshell autostart >>>"
+end="# <<< petshell autostart <<<"
+
+[ -f "$autostart" ] || exit 0
+
+tmp="$(mktemp)"
+awk -v begin="$begin" -v end="$end" '
+  $0 == begin { skip = 1; next }
+  $0 == end { skip = 0; next }
+  !skip { print }
+' "$autostart" > "$tmp"
+
+mv "$tmp" "$autostart"
+printf 'updated %s\n' "$autostart"
+printf 'reload Hyprland with: hyprctl reload\n'
+

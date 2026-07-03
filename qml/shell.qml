@@ -6,7 +6,7 @@ import Quickshell.Wayland
 ShellRoot {
     id: shell
 
-    readonly property string repoRoot: "/home/dev/REPOS/petshell"
+    readonly property string repoRoot: "@PETSHELL_ROOT@"
     readonly property string settingsPath: repoRoot + "/config/settings.json"
     readonly property string eventPath: repoRoot + "/config/event.json"
     property string activePet: "dhh-pet"

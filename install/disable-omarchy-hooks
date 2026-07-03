@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+hooks_root="${XDG_CONFIG_HOME:-$HOME/.config}/omarchy/hooks"
+
+for path in \
+  "$hooks_root/post-update.d/petshell-commentary" \
+  "$hooks_root/theme-set.d/petshell-commentary" \
+  "$hooks_root/font-set.d/petshell-commentary" \
+  "$hooks_root/battery-low.d/petshell-commentary" \
+  "$hooks_root/post-boot.d/petshell-commentary"; do
+  if [ -e "$path" ]; then
+    rm -f "$path"
+    printf 'removed %s\n' "$path"
+  fi
+done
+

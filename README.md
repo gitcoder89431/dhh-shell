@@ -19,10 +19,52 @@ The current base is a DHH-inspired sprite pet with draggable movement, system-st
 Stop the running shell:
 
 ```bash
-qs kill -p /home/dev/REPOS/petshell/qml/shell.qml
+qs kill -p "$(pwd)/.cache/shell.qml"
 ```
 
-Note: `qml/shell.qml` currently has `/home/dev/REPOS/petshell` as its asset root. If the repo moves, update `repoRoot` in that file.
+`petshell-dev` generates `.cache/shell.qml` from `qml/shell.qml` with the current repo path. That keeps the checked-in QML portable.
+
+## Optional Install
+
+Clone wherever you keep dotfiles or local tools:
+
+```bash
+git clone <repo-url> ~/.config/petshell
+cd ~/.config/petshell
+./bin/petshell-dev
+```
+
+Enable optional integrations explicitly:
+
+```bash
+./install/enable-omarchy-hooks
+./install/enable-hypr-bindings
+./install/enable-autostart
+```
+
+Or enable all optional integrations:
+
+```bash
+./install/enable-all
+hyprctl reload
+```
+
+Disable optional integrations:
+
+```bash
+./install/disable-omarchy-hooks
+./install/disable-hypr-bindings
+./install/disable-autostart
+```
+
+Or disable all optional integrations:
+
+```bash
+./install/disable-all
+hyprctl reload
+```
+
+The install scripts only write marked user-config blocks/files under `~/.config`; they do not edit Omarchy source files.
 
 ## Controls
 

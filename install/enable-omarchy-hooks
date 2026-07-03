@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd -- "$script_dir/.." && pwd)"
+hooks_root="${XDG_CONFIG_HOME:-$HOME/.config}/omarchy/hooks"
+
+install_hook() {
+  local type="$1"
+  local event="$2"
+  local extra_arg="${3:-}"
+  local dir="$hooks_root/$type.d"
+  local path="$dir/petshell-commentary"
+
+  mkdir -p "$dir"
+  cat > "$path" <<EOF
+#!/usr/bin/env bash
+
+"$repo_root/bin/petshell-omarchy-event" "$event" $extra_arg >/dev/null 2>&1 || true
+EOF
+  chmod +x "$path"
+  printf 'installed %s\n' "$path"
+}
+
+install_hook post-update update-done
+install_hook theme-set theme-set '"${1:-theme}"'
+install_hook font-set font-set '"${1:-font}"'
+install_hook battery-low battery-low '"${1:-low}"'
+install_hook post-boot post-boot
+

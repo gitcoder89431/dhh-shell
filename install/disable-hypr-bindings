@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+bindings="${XDG_CONFIG_HOME:-$HOME/.config}/hypr/bindings.conf"
+begin="# >>> petshell commentary bindings >>>"
+end="# <<< petshell commentary bindings <<<"
+
+[ -f "$bindings" ] || exit 0
+
+tmp="$(mktemp)"
+awk -v begin="$begin" -v end="$end" '
+  $0 == begin { skip = 1; next }
+  $0 == end { skip = 0; next }
+  !skip { print }
+' "$bindings" > "$tmp"
+
+mv "$tmp" "$bindings"
+printf 'updated %s\n' "$bindings"
+printf 'reload Hyprland with: hyprctl reload\n'
+

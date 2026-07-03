@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+"$script_dir/disable-omarchy-hooks"
+"$script_dir/disable-hypr-bindings"
+"$script_dir/disable-autostart"
+
+printf '\nAll optional integrations removed. Reload Hyprland with: hyprctl reload\n'

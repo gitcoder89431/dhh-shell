@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd -- "$script_dir/.." && pwd)"
+bindings="${XDG_CONFIG_HOME:-$HOME/.config}/hypr/bindings.conf"
+begin="# >>> petshell commentary bindings >>>"
+end="# <<< petshell commentary bindings <<<"
+
+mkdir -p "$(dirname "$bindings")"
+touch "$bindings"
+
+tmp="$(mktemp)"
+awk -v begin="$begin" -v end="$end" '
+  $0 == begin { skip = 1; next }
+  $0 == end { skip = 0; next }
+  !skip { print }
+' "$bindings" > "$tmp"
+
+cat >> "$tmp" <<EOF
+
+$begin
+unbind = SUPER, K
+bindd = SUPER, K, Show key bindings, exec, $repo_root/bin/petshell-omarchy-event keybindings; omarchy-menu-keybindings
+unbind = SUPER, SPACE
+bindd = SUPER, SPACE, Launch apps, exec, $repo_root/bin/petshell-omarchy-event launcher; omarchy-launch-walker
+unbind = SUPER CTRL, C
+bindd = SUPER CTRL, C, Capture menu, exec, $repo_root/bin/petshell-omarchy-event capture-menu; omarchy-menu capture
+unbind = SUPER, ESCAPE
+bindd = SUPER, ESCAPE, System menu, exec, $repo_root/bin/petshell-omarchy-event system-menu; omarchy-menu system
+unbind = SUPER SHIFT CTRL, SPACE
+bindd = SUPER SHIFT CTRL, SPACE, Theme menu, exec, $repo_root/bin/petshell-omarchy-event theme-menu; omarchy-menu theme
+unbind = SUPER CTRL, T
+bindd = SUPER CTRL, T, Activity, exec, $repo_root/bin/petshell-omarchy-event activity; omarchy-launch-tui btop
+$end
+EOF
+
+mv "$tmp" "$bindings"
+printf 'updated %s\n' "$bindings"
+printf 'reload Hyprland with: hyprctl reload\n'
+
