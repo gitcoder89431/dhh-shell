@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd -- "$script_dir/.." && pwd)"
+event_file="$repo_root/config/event.json"
+
+usage() {
+  cat >&2 <<'EOF'
+usage: petshell-notify [--state STATE] [--duration MS] MESSAGE
+
+states: wave, alert, thinking, sad, coding, review, jump
+EOF
+}
+
+state="wave"
+duration="2200"
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --state)
+      state="${2:-}"
+      shift 2
+      ;;
+    --duration)
+      duration="${2:-}"
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*)
+      usage
+      exit 1
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+message="$*"
+if [ -z "$message" ]; then
+  usage
+  exit 1
+fi
+
+case "$state" in
+  wave|alert|thinking|sad|coding|review|jump) ;;
+  *)
+    printf 'unknown state: %s\n' "$state" >&2
+    usage
+    exit 1
+    ;;
+esac
+
+if ! awk "BEGIN { exit !($duration >= 700 && $duration <= 8000) }" 2>/dev/null; then
+  printf 'duration must be between 700 and 8000 ms\n' >&2
+  exit 1
+fi
+
+mkdir -p "$(dirname "$event_file")"
+tmp="$(mktemp)"
+jq -cn \
+  --argjson id "$(date +%s%3N)" \
+  --arg state "$state" \
+  --arg message "$message" \
+  --argjson duration "$duration" \
+  '{ id: $id, state: $state, message: $message, duration: $duration }' > "$tmp"
+mv "$tmp" "$event_file"

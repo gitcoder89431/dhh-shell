@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+read_cpu() {
+  awk '/^cpu / {
+    idle=$5+$6
+    total=0
+    for (i=2; i<=NF; i++) total += $i
+    print idle, total
+  }' /proc/stat
+}
+
+read idle1 total1 < <(read_cpu)
+sleep 0.2
+read idle2 total2 < <(read_cpu)
+
+idle_delta=$((idle2 - idle1))
+total_delta=$((total2 - total1))
+if [ "$total_delta" -gt 0 ]; then
+  cpu=$((100 * (total_delta - idle_delta) / total_delta))
+else
+  cpu=0
+fi
+
+read mem_total mem_available < <(awk '
+  /^MemTotal:/ { total=$2 }
+  /^MemAvailable:/ { available=$2 }
+  END { print total, available }
+' /proc/meminfo)
+
+if [ "${mem_total:-0}" -gt 0 ]; then
+  ram=$((100 * (mem_total - mem_available) / mem_total))
+else
+  ram=0
+fi
+
+battery=-1
+battery_status="Unknown"
+if [ -r /sys/class/power_supply/BAT0/capacity ]; then
+  battery="$(cat /sys/class/power_supply/BAT0/capacity)"
+fi
+if [ -r /sys/class/power_supply/BAT0/status ]; then
+  battery_status="$(cat /sys/class/power_supply/BAT0/status)"
+fi
+
+state="idle"
+rule="default"
+
+if [ "$battery" -ge 0 ] && [ "$battery" -le 10 ] && [ "$battery_status" = "Discharging" ]; then
+  state="alert"
+  rule="battery critical"
+elif [ "$cpu" -ge 85 ] || [ "$ram" -ge 90 ]; then
+  state="alert"
+  rule="system pressure"
+elif [ "$battery" -ge 0 ] && [ "$battery" -le 20 ] && [ "$battery_status" = "Discharging" ]; then
+  state="sad"
+  rule="battery low"
+elif [ "$cpu" -ge 55 ] || [ "$ram" -ge 78 ]; then
+  state="thinking"
+  rule="busy"
+fi
+
+summary="CPU ${cpu}%  RAM ${ram}%"
+if [ "$battery" -ge 0 ]; then
+  summary="$summary  BAT ${battery}%"
+fi
+
+jq -cn \
+  --arg state "$state" \
+  --arg rule "$rule" \
+  --arg summary "$summary" \
+  --arg batteryStatus "$battery_status" \
+  --argjson cpu "$cpu" \
+  --argjson ram "$ram" \
+  --argjson battery "$battery" \
+  '{
+    state: $state,
+    rule: $rule,
+    summary: $summary,
+    cpu: $cpu,
+    ram: $ram,
+    battery: $battery,
+    batteryStatus: $batteryStatus
+  }'

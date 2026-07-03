@@ -1,0 +1,8 @@
+config/event.json
+references/
+pets/*/qa/
+*.zip
+*.log
+*.qslog
+tmp/
+.cache/

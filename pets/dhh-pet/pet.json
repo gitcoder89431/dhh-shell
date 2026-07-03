@@ -1,0 +1,70 @@
+{
+  "id": "dhh-pet",
+  "displayName": "DHH Pet",
+  "description": "Active DHH hybrid sprite set: v1 base with only v2 waiting and review rows.",
+  "spritesheetPath": "spritesheet.png",
+  "cols": 8,
+  "rows": 9,
+  "frameWidth": 192,
+  "frameHeight": 208,
+  "states": {
+    "idle": {
+      "row": 0,
+      "fps": 5,
+      "loop": true,
+      "frames": [0, 0, 0, 1, 2, 3, 4, 5, 0, 0]
+    },
+    "walk_right": {
+      "row": 1,
+      "fps": 10,
+      "loop": true
+    },
+    "walk_left": {
+      "row": 2,
+      "fps": 10,
+      "loop": true
+    },
+    "wave": {
+      "row": 3,
+      "fps": 7,
+      "loop": false,
+      "frames": [0, 1, 2, 1, 2, 3],
+      "fallback": "idle"
+    },
+    "jump": {
+      "row": 4,
+      "fps": 9,
+      "loop": false,
+      "frames": [0, 1, 2, 3, 4],
+      "fallback": "idle"
+    },
+    "sad": {
+      "row": 5,
+      "fps": 5,
+      "loop": true
+    },
+    "alert": {
+      "row": 5,
+      "fps": 6,
+      "loop": true
+    },
+    "thinking": {
+      "row": 6,
+      "fps": 5,
+      "loop": true,
+      "frames": [0, 1, 2, 3, 4, 5]
+    },
+    "coding": {
+      "row": 8,
+      "fps": 6,
+      "loop": true,
+      "frames": [0, 1, 2, 3, 4, 5]
+    },
+    "review": {
+      "row": 8,
+      "fps": 6,
+      "loop": true,
+      "frames": [0, 1, 2, 3, 4, 5]
+    }
+  }
+}
