@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd -- "$script_dir/.." && pwd)"
+command_file="$repo_root/config/command.json"
+
+usage() {
+  cat >&2 <<'EOF'
+usage: dhh-shell-command [open|close|toggle]
+EOF
+}
+
+action="${1:-toggle}"
+case "$action" in
+  open|close|toggle) ;;
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  *)
+    usage
+    exit 1
+    ;;
+esac
+
+mkdir -p "$(dirname "$command_file")"
+tmp="$(mktemp)"
+jq -cn \
+  --argjson id "$(date +%s%3N)" \
+  --arg action "$action" \
+  '{ id: $id, action: $action }' > "$tmp"
+mv "$tmp" "$command_file"

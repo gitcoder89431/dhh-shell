@@ -9,11 +9,16 @@ ShellRoot {
     readonly property string repoRoot: "@DHH_SHELL_ROOT@"
     readonly property string settingsPath: repoRoot + "/config/settings.json"
     readonly property string eventPath: repoRoot + "/config/event.json"
+    readonly property string commandPath: repoRoot + "/config/command.json"
     property real dhhScale: 1.0
     property var dhhMeta: ({})
     property var dhhStates: ({})
     property int lastEventId: 0
+    property int lastCommandId: 0
     property bool eventFilePrimed: false
+    property bool commandFilePrimed: false
+    property bool commandPaletteOpen: false
+    property int commandPaletteRequestId: 0
     property int eventId: 0
     property string eventMessage: ""
     property string eventState: "wave"
@@ -87,6 +92,34 @@ ShellRoot {
         }
     }
 
+    function handleCommand(raw) {
+        try {
+            const command = JSON.parse(raw || "{}");
+            const commandId = Number(command.id || 0);
+            if (!commandFilePrimed) {
+                lastCommandId = commandId;
+                commandFilePrimed = true;
+                return;
+            }
+            if (commandId <= 0 || commandId === lastCommandId) {
+                return;
+            }
+            lastCommandId = commandId;
+
+            const action = String(command.action || "toggle");
+            if (action === "open") {
+                commandPaletteOpen = true;
+            } else if (action === "close") {
+                commandPaletteOpen = false;
+            } else {
+                commandPaletteOpen = !commandPaletteOpen;
+            }
+            commandPaletteRequestId = commandId;
+        } catch (error) {
+            console.warn("dhh-shell: failed to parse command:", error);
+        }
+    }
+
     FileView {
         id: settingsFile
         path: shell.settingsPath
@@ -119,6 +152,17 @@ ShellRoot {
         onFileChanged: reload()
         onLoadFailed: function(error) {
             shell.eventFilePrimed = true;
+        }
+    }
+
+    FileView {
+        id: commandFile
+        path: shell.commandPath
+        watchChanges: true
+        onLoaded: shell.handleCommand(text())
+        onFileChanged: reload()
+        onLoadFailed: function(error) {
+            shell.commandFilePrimed = true;
         }
     }
 
@@ -410,6 +454,24 @@ ShellRoot {
                         }
                     }
                 }
+            }
+        }
+
+    }
+
+    Variants {
+        model: Quickshell.screens
+
+        Scope {
+            id: commandScope
+            required property var modelData
+
+            CommandPalette {
+                panelScreen: commandScope.modelData
+                repoRoot: shell.repoRoot
+                open: shell.commandPaletteOpen
+                requestId: shell.commandPaletteRequestId
+                onCloseRequested: shell.commandPaletteOpen = false
             }
         }
     }

@@ -24,6 +24,8 @@ unbind = SUPER, K
 bindd = SUPER, K, Show key bindings, exec, $repo_root/bin/dhh-shell-omarchy-event keybindings; omarchy-menu-keybindings
 unbind = SUPER, SPACE
 bindd = SUPER, SPACE, Launch apps, exec, $repo_root/bin/dhh-shell-omarchy-event launcher; omarchy-launch-walker
+unbind = SUPER CTRL, SPACE
+bindd = SUPER CTRL, SPACE, DHH command palette, exec, $repo_root/bin/dhh-shell-command toggle
 unbind = SUPER CTRL, C
 bindd = SUPER CTRL, C, Capture menu, exec, $repo_root/bin/dhh-shell-omarchy-event capture-menu; omarchy-menu capture
 unbind = SUPER, ESCAPE
@@ -38,4 +40,3 @@ EOF
 mv "$tmp" "$bindings"
 printf 'updated %s\n' "$bindings"
 printf 'reload Hyprland with: hyprctl reload\n'
-

@@ -82,6 +82,12 @@ Send a message bubble and play an animation:
 ./bin/dhh-shell-notify --state wave "DHH online"
 ```
 
+Open the native command palette:
+
+```bash
+./bin/dhh-shell-command open
+```
+
 Send an opinionated Omarchy/desktop event:
 
 ```bash
