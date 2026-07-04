@@ -33,9 +33,9 @@ events:
   reminder-done
   reload-hyprland
   restart-waybar
-  dhh-wave
-  dhh-think
-  dhh-review
+  dhh-opinion
+  dhh-status
+  dhh-quote
 EOF
 }
 
@@ -122,14 +122,14 @@ case "$event" in
   restart-waybar)
     say coding 1700 restart-waybar
     ;;
-  dhh-wave)
-    say wave 1600 dhh-wave
+  dhh-opinion)
+    say wave 2400 dhh-opinion
     ;;
-  dhh-think)
-    say thinking 1800 dhh-think
+  dhh-status)
+    say thinking 1200 dhh-status
     ;;
-  dhh-review)
-    say review 1900 dhh-review
+  dhh-quote)
+    say review 2600 dhh-quote
     ;;
   -h|--help)
     usage

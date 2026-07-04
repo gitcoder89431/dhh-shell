@@ -209,25 +209,29 @@ case "$event" in
     )
     pick quotes
     ;;
-  dhh-wave)
+  dhh-opinion)
     quotes=(
-      "DHH online."
-      "Up. Opinionated. Watching."
-      "Present. Mildly judgmental."
+      "Your computer is not a democracy. It needs taste."
+      "Most features are just anxiety with a settings page."
+      "Delete one thing. You will feel better."
+      "A tiny sharp tool beats a sprawling platform cosplay."
+      "If the menu needs a search bar, at least make the search bar beautiful."
     )
     pick quotes
     ;;
-  dhh-think)
+  dhh-status)
+    quotes=(
+      "Consulting the machine spirits."
+      "Measuring first. Panic later."
+      "Reading the gauges. Dashboards lie, sensors confess."
+    )
+    pick quotes
+    ;;
+  dhh-quote)
     quotes=(
       "Thinking is free. Mistakes are expensive."
       "Most software has a tiny essence. Find it."
       "Do less of what doesn't need doing."
-    )
-    pick quotes
-    ;;
-  dhh-review)
-    quotes=(
-      "Read the diff. Respect the machine."
       "Review mode. The code has to explain itself."
       "You're better off with a kick-ass half than a half-assed whole."
     )

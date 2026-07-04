@@ -53,9 +53,9 @@ PanelWindow {
         {
             label: "DHH",
             items: [
-                { label: "Announce DHH is online", value: "dhh-wave", shortcut: "d w", keywords: ["hello", "wave", "online"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " dhh-wave" },
-                { label: "Think about the smallest useful thing", value: "dhh-think", shortcut: "d t", keywords: ["think", "waiting", "essence"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " dhh-think" },
-                { label: "Review the diff like it owes you money", value: "dhh-review", shortcut: "d r", keywords: ["review", "code", "diff"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " dhh-review" }
+                { label: "What is DHH thinking?", value: "dhh-opinion", shortcut: "d o", keywords: ["opinion", "quote", "bro", "unix", "dhh"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " dhh-opinion" },
+                { label: "Ask DHH if the machine is suffering", value: "dhh-status", shortcut: "d s", keywords: ["status", "cpu", "ram", "battery"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " dhh-status; " + quote(repoRoot + "/bin/dhh-shell-verdict") },
+                { label: "Consult the tiny prophet of less software", value: "dhh-quote", shortcut: "d q", keywords: ["quote", "wisdom", "less", "prophet"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " dhh-quote" }
             ]
         },
         {

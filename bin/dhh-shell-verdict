@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+state_json="$("$script_dir/dhh-shell-system-state")"
+
+cpu="$(jq -r '.cpu' <<<"$state_json")"
+ram="$(jq -r '.ram' <<<"$state_json")"
+battery="$(jq -r '.battery' <<<"$state_json")"
+battery_status="$(jq -r '.batteryStatus' <<<"$state_json")"
+state="$(jq -r '.state' <<<"$state_json")"
+rule="$(jq -r '.rule' <<<"$state_json")"
+
+case "$state" in
+  wave|alert|thinking|sad|coding|review|jump) ;;
+  idle) state="wave" ;;
+  *) state="wave" ;;
+esac
+
+if [ "$battery" -ge 0 ]; then
+  battery_text="BAT ${battery}%"
+else
+  battery_text="BAT unknown"
+fi
+
+if [ "$rule" = "battery critical" ]; then
+  message="The machine is begging for power: CPU ${cpu}%, RAM ${ram}%, ${battery_text}. Plug in. Non-negotiable."
+elif [ "$rule" = "battery low" ]; then
+  message="Battery is getting dramatic: CPU ${cpu}%, RAM ${ram}%, ${battery_text}. Even prophets need electrons."
+elif [ "$rule" = "system pressure" ]; then
+  message="System pressure detected: CPU ${cpu}%, RAM ${ram}%, ${battery_text}. Maybe close the tab farm."
+elif [ "$rule" = "busy" ]; then
+  message="The machine is working: CPU ${cpu}%, RAM ${ram}%, ${battery_text}. Respect the fan."
+elif [ "$battery_status" = "Charging" ]; then
+  message="CPU ${cpu}%, RAM ${ram}%, ${battery_text}, charging. The machine accepts your tribute."
+else
+  message="CPU ${cpu}%, RAM ${ram}%, ${battery_text}. Calm enough. Ship something."
+fi
+
+"$script_dir/dhh-shell-notify" --state "$state" --duration 3200 "$message"
