@@ -3,6 +3,7 @@ set -euo pipefail
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 notify="$script_dir/dhh-shell-notify"
+commentary="$script_dir/dhh-shell-commentary"
 
 usage() {
   cat >&2 <<'EOF'
@@ -25,61 +26,110 @@ events:
   post-boot
   launcher
   activity
+  lazygit
+  lazydocker
+  lock
+  workspace-switch
+  reminder-done
+  reload-hyprland
+  restart-waybar
+  dhh-wave
+  dhh-think
+  dhh-review
 EOF
+}
+
+say() {
+  local state="$1"
+  local duration="$2"
+  local event="$3"
+  shift 3
+
+  "$notify" --state "$state" --duration "$duration" "$("$commentary" "$event" "$@")"
 }
 
 event="${1:-}"
 case "$event" in
   keybindings)
-    "$notify" --state review --duration 1800 "Every shortcut is a command waiting to happen."
+    say review 1800 keybindings
     ;;
   screenshot)
-    "$notify" --state wave --duration 1600 "Proof or it didn't happen."
+    say wave 1600 screenshot
     ;;
   capture-menu)
-    "$notify" --state review --duration 1600 "Screenshots, recordings, receipts."
+    say review 1600 capture-menu
     ;;
   recording-start)
-    "$notify" --state coding --duration 1800 "Rolling tape. Make it worth the pixels."
+    say coding 1800 recording-start
     ;;
   recording-stop)
-    "$notify" --state jump --duration 1600 "Cut. Ship the clip."
+    say jump 1600 recording-stop
     ;;
   system-menu)
-    "$notify" --state thinking --duration 1700 "Power is a menu. Use it wisely."
+    say thinking 1700 system-menu
     ;;
   theme-menu)
-    "$notify" --state review --duration 1700 "Taste is configuration."
+    say review 1700 theme-menu
     ;;
   background-menu)
-    "$notify" --state wave --duration 1600 "Set the mood, then ship."
+    say wave 1600 background-menu
     ;;
   update)
-    "$notify" --state thinking --duration 2000 "Ship small, upgrade often."
+    say thinking 2000 update
     ;;
   update-done)
-    "$notify" --state jump --duration 2400 "The machine has been sharpened. Reboot only if the gods demand it."
+    say jump 2400 update-done
     ;;
   theme-set)
     theme="${2:-new_theme}"
-    "$notify" --state review --duration 2200 "New robe: ${theme}. Same shell, sharper opinions."
+    say review 2200 theme-set "$theme"
     ;;
   font-set)
     font="${2:-monospace}"
-    "$notify" --state wave --duration 2000 "Typography is infrastructure. ${font} enters the chat."
+    say wave 2000 font-set "$font"
     ;;
   battery-low)
     percent="${2:-low}"
-    "$notify" --state sad --duration 2600 "Battery at ${percent}%. Even Unix prophets need electrons."
+    say sad 2600 battery-low "$percent"
     ;;
   post-boot)
-    "$notify" --state wave --duration 2200 "Boot complete. The daemon is awake."
+    say wave 2200 post-boot
     ;;
   launcher)
-    "$notify" --state wave --duration 1400 "Summon the tools."
+    say wave 1400 launcher
     ;;
   activity)
-    "$notify" --state thinking --duration 1700 "Measure first. Panic later."
+    say thinking 1700 activity
+    ;;
+  lazygit)
+    say coding 1800 lazygit
+    ;;
+  lazydocker)
+    say thinking 1800 lazydocker
+    ;;
+  lock)
+    say wave 1700 lock
+    ;;
+  workspace-switch)
+    say jump 1300 workspace-switch
+    ;;
+  reminder-done)
+    say alert 2200 reminder-done
+    ;;
+  reload-hyprland)
+    say coding 1700 reload-hyprland
+    ;;
+  restart-waybar)
+    say coding 1700 restart-waybar
+    ;;
+  dhh-wave)
+    say wave 1600 dhh-wave
+    ;;
+  dhh-think)
+    say thinking 1800 dhh-think
+    ;;
+  dhh-review)
+    say review 1900 dhh-review
     ;;
   -h|--help)
     usage

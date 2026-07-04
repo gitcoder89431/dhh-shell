@@ -1,0 +1,244 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat >&2 <<'EOF'
+usage: dhh-shell-commentary EVENT [ARG...]
+
+Prints one randomized DHH-shell line for an event.
+EOF
+}
+
+pick() {
+  local -n pool="$1"
+  printf '%s\n' "${pool[$RANDOM % ${#pool[@]}]}"
+}
+
+event="${1:-}"
+shift || true
+
+case "$event" in
+  keybindings)
+    quotes=(
+      "Shortcuts. Learn them."
+      "Every shortcut is a command waiting to happen."
+      "The keyboard is the instrument. Master it."
+    )
+    pick quotes
+    ;;
+  screenshot)
+    quotes=(
+      "Proof or it didn't happen."
+      "Evidence. Always keep evidence."
+      "A screenshot is worth a thousand commits."
+    )
+    pick quotes
+    ;;
+  capture-menu)
+    quotes=(
+      "Screenshots, recordings, receipts."
+      "Capture the thing before you explain the thing."
+      "Receipts first. Narratives second."
+    )
+    pick quotes
+    ;;
+  recording-start)
+    quotes=(
+      "Rolling. Make it count."
+      "Rolling tape. Make it worth the pixels."
+      "Don't say anything you wouldn't put in a commit message."
+    )
+    pick quotes
+    ;;
+  recording-stop)
+    quotes=(
+      "Cut."
+      "That's a take. Ship it."
+      "Cut. Ship the clip."
+    )
+    pick quotes
+    ;;
+  system-menu)
+    quotes=(
+      "Power is a menu. Use it wisely."
+      "A clean exit beats a dramatic crash."
+      "Shutdowns are just deployments to silence."
+    )
+    pick quotes
+    ;;
+  theme-menu)
+    quotes=(
+      "Taste is configuration."
+      "Aesthetics are not optional. They are the interface."
+      "Pick a robe. Keep the opinions."
+    )
+    pick quotes
+    ;;
+  background-menu)
+    quotes=(
+      "Set the mood, then ship."
+      "Wallpaper is not work. But it can help."
+      "A little atmosphere. Not a lifestyle."
+    )
+    pick quotes
+    ;;
+  update)
+    quotes=(
+      "Ship small, upgrade often."
+      "Upgrading. Stay sharp."
+      "Planning is harmful guessing. Upgrading is just doing."
+    )
+    pick quotes
+    ;;
+  update-done)
+    quotes=(
+      "The machine has been sharpened. Reboot only if the gods demand it."
+      "Sharp. No reboot needed."
+      "Shipped. Again."
+      "The machine improves. So should your opinions."
+    )
+    pick quotes
+    ;;
+  theme-set)
+    theme="${1:-new theme}"
+    quotes=(
+      "New robe: ${theme}. Same shell, sharper opinions."
+      "New robe. Same opinions."
+      "Taste is configuration. Current taste: ${theme}."
+    )
+    pick quotes
+    ;;
+  font-set)
+    font="${1:-monospace}"
+    quotes=(
+      "Typography is infrastructure. ${font} enters the chat."
+      "A programmer who cares about their font cares about their craft."
+      "Good choice. ${font} can stay."
+    )
+    pick quotes
+    ;;
+  battery-low)
+    percent="${1:-low}"
+    quotes=(
+      "Battery at ${percent}%. Even Unix prophets need electrons."
+      "Plug in. Non-negotiable."
+      "Even the best tools need charging."
+      "Fear makes you irrational. Low battery makes you frantic."
+    )
+    pick quotes
+    ;;
+  post-boot)
+    quotes=(
+      "Boot complete. The daemon is awake."
+      "Booted. Opinions loaded."
+      "Another day. Another chance to delete something unnecessary."
+      "Up. Running. Opinionated."
+      "Good morning. Let's ship something real today."
+    )
+    pick quotes
+    ;;
+  launcher)
+    quotes=(
+      "Summon the tools."
+      "Every menu is a decision. Make it fast."
+      "Tools exist to serve. Not to impress."
+    )
+    pick quotes
+    ;;
+  activity)
+    quotes=(
+      "Measure first. Panic later."
+      "Data before opinions. Usually."
+      "Numbers don't lie. Dashboards do."
+    )
+    pick quotes
+    ;;
+  lazygit)
+    quotes=(
+      "Commit messages are love letters to your future self."
+      "Small commits. Sharp history."
+      "The diff is the truth. Everything else is theater."
+    )
+    pick quotes
+    ;;
+  lazydocker)
+    quotes=(
+      "Containers are just opinions with networking."
+      "If it needs five services to say hello, question your life choices."
+      "Docker is fine. Dependency sprawl is not."
+    )
+    pick quotes
+    ;;
+  lock)
+    quotes=(
+      "Locked. The cursor rests. The mind wanders."
+      "Walk away. The machine can wait."
+      "Security is boring. Good."
+    )
+    pick quotes
+    ;;
+  workspace-switch)
+    quotes=(
+      "Context switch accepted. Unlike JavaScript callbacks."
+      "New workspace. Same discipline."
+      "Move with intent."
+    )
+    pick quotes
+    ;;
+  reminder-done)
+    quotes=(
+      "Time's up. Ship it or kill it."
+      "The reminder did its job. Now do yours."
+      "A timer is just a tiny manager."
+    )
+    pick quotes
+    ;;
+  reload-hyprland)
+    quotes=(
+      "Reloading the compositor. The frame obeys."
+      "Hyprland reload. Configuration is a living document."
+      "Sharp edges, fresh config."
+    )
+    pick quotes
+    ;;
+  restart-waybar)
+    quotes=(
+      "Restarting the bar. Status should earn its pixels."
+      "The bar returns, hopefully with fewer lies."
+      "Panels are dashboards. Dashboards need discipline."
+    )
+    pick quotes
+    ;;
+  dhh-wave)
+    quotes=(
+      "DHH online."
+      "Up. Opinionated. Watching."
+      "Present. Mildly judgmental."
+    )
+    pick quotes
+    ;;
+  dhh-think)
+    quotes=(
+      "Thinking is free. Mistakes are expensive."
+      "Most software has a tiny essence. Find it."
+      "Do less of what doesn't need doing."
+    )
+    pick quotes
+    ;;
+  dhh-review)
+    quotes=(
+      "Read the diff. Respect the machine."
+      "Review mode. The code has to explain itself."
+      "You're better off with a kick-ass half than a half-assed whole."
+    )
+    pick quotes
+    ;;
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  *)
+    usage
+    exit 1
+    ;;
+esac

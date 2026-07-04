@@ -53,26 +53,29 @@ PanelWindow {
         {
             label: "DHH",
             items: [
-                { label: "Wave from DHH", value: "dhh-wave", shortcut: "d w", keywords: ["hello", "online"], command: quote(repoRoot + "/bin/dhh-shell-notify") + " --state wave \"DHH online\"" },
-                { label: "Thinking mode", value: "dhh-think", shortcut: "d t", keywords: ["think", "waiting"], command: quote(repoRoot + "/bin/dhh-shell-notify") + " --state thinking \"Thinking is free. Mistakes are expensive.\"" },
-                { label: "Review mode", value: "dhh-review", shortcut: "d r", keywords: ["review", "code"], command: quote(repoRoot + "/bin/dhh-shell-notify") + " --state review \"Read the diff. Respect the machine.\"" }
+                { label: "Announce DHH is online", value: "dhh-wave", shortcut: "d w", keywords: ["hello", "wave", "online"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " dhh-wave" },
+                { label: "Think about the smallest useful thing", value: "dhh-think", shortcut: "d t", keywords: ["think", "waiting", "essence"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " dhh-think" },
+                { label: "Review the diff like it owes you money", value: "dhh-review", shortcut: "d r", keywords: ["review", "code", "diff"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " dhh-review" }
             ]
         },
         {
-            label: "Omarchy",
+            label: "Omarchy Decisions",
             items: [
-                { label: "Open app launcher", value: "launcher", shortcut: "super space", keywords: ["walker", "apps"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " launcher; omarchy-launch-walker" },
-                { label: "Show key bindings", value: "keybindings", shortcut: "super k", keywords: ["help", "shortcuts"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " keybindings; omarchy-menu-keybindings" },
-                { label: "Open system menu", value: "system-menu", shortcut: "super esc", keywords: ["power", "logout"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " system-menu; omarchy-menu system" },
-                { label: "Open capture menu", value: "capture-menu", shortcut: "super ctrl c", keywords: ["screenshot", "record"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " capture-menu; omarchy-menu capture" }
+                { label: "Summon only the tool you need", value: "launcher", shortcut: "super space", keywords: ["walker", "apps", "launcher"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " launcher; omarchy-launch-walker" },
+                { label: "Learn the keyboard instrument", value: "keybindings", shortcut: "super k", keywords: ["help", "shortcuts", "keys"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " keybindings; omarchy-menu-keybindings" },
+                { label: "Choose power deliberately", value: "system-menu", shortcut: "super esc", keywords: ["power", "logout", "shutdown"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " system-menu; omarchy-menu system" },
+                { label: "Capture receipts before explaining", value: "capture-menu", shortcut: "super ctrl c", keywords: ["screenshot", "record", "capture"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " capture-menu; omarchy-menu capture" },
+                { label: "Change the robe, keep the opinions", value: "theme-menu", shortcut: "theme", keywords: ["theme", "style", "robe"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " theme-menu; omarchy-menu theme" }
             ]
         },
         {
-            label: "System",
+            label: "Machine Discipline",
             items: [
-                { label: "Reload Hyprland", value: "reload-hyprland", shortcut: "hypr", keywords: ["config", "reload"], command: quote(repoRoot + "/bin/dhh-shell-notify") + " --state coding \"Reloading the compositor.\"; hyprctl reload" },
-                { label: "Restart Waybar", value: "restart-waybar", shortcut: "bar", keywords: ["status", "panel"], command: quote(repoRoot + "/bin/dhh-shell-notify") + " --state coding \"Restarting the bar.\"; omarchy restart waybar" },
-                { label: "Open activity monitor", value: "activity", shortcut: "super ctrl t", keywords: ["btop", "stats"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " activity; omarchy-launch-tui btop" }
+                { label: "Reload the compositor without drama", value: "reload-hyprland", shortcut: "hypr", keywords: ["config", "reload", "hyprland"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " reload-hyprland; hyprctl reload" },
+                { label: "Restart the status bar", value: "restart-waybar", shortcut: "bar", keywords: ["status", "panel", "waybar"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " restart-waybar; omarchy restart waybar" },
+                { label: "Measure before you panic", value: "activity", shortcut: "super ctrl t", keywords: ["btop", "stats", "activity"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " activity; omarchy-launch-tui btop" },
+                { label: "Commit with future-you in mind", value: "lazygit", shortcut: "git", keywords: ["git", "lazygit", "commit"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " lazygit; omarchy-launch-tui lazygit" },
+                { label: "Inspect the container opinions", value: "lazydocker", shortcut: "docker", keywords: ["docker", "containers", "lazydocker"], command: quote(repoRoot + "/bin/dhh-shell-omarchy-event") + " lazydocker; omarchy-launch-tui lazydocker" }
             ]
         }
     ]
@@ -325,23 +328,20 @@ PanelWindow {
                     spacing: 10
 
                     Rectangle {
-                        width: aiMode ? parent.width - 148 : parent.width - 112
+                        width: aiMode ? parent.width - 148 : parent.width - 132
                         height: 42
                         anchors.verticalCenter: parent.verticalCenter
-                        radius: 10
-                        color: root.bg
-                        border.width: 1
-                        border.color: Qt.rgba(1, 1, 1, 0.10)
+                        color: "transparent"
 
                         Text {
                             id: searchIcon
                             anchors.left: parent.left
                             anchors.leftMargin: 12
                             anchors.verticalCenter: parent.verticalCenter
-                            text: aiMode ? "*" : "Search"
+                            text: aiMode ? "✦" : ""
                             color: root.subtle
-                            font.family: root.uiFont
-                            font.pixelSize: aiMode ? 15 : 10
+                            font.family: aiMode ? root.uiFont : "JetBrainsMono Nerd Font"
+                            font.pixelSize: aiMode ? 15 : 14
                             font.weight: Font.Bold
                         }
 
@@ -358,6 +358,7 @@ PanelWindow {
                             selectedTextColor: root.bg
                             font.family: root.uiFont
                             font.pixelSize: 14
+                            verticalAlignment: TextInput.AlignVCenter
                             clip: true
                             text: root.searchQuery
                             onTextChanged: root.searchQuery = text
@@ -395,6 +396,7 @@ PanelWindow {
                             selectedTextColor: root.bg
                             font.family: root.uiFont
                             font.pixelSize: 14
+                            verticalAlignment: TextInput.AlignVCenter
                             clip: true
                             text: root.aiQuery
                             onTextChanged: root.aiQuery = text
@@ -415,7 +417,7 @@ PanelWindow {
                         Text {
                             visible: !root.aiMode && searchInput.text.length === 0
                             anchors.left: searchInput.left
-                            anchors.verticalCenter: searchInput.verticalCenter
+                            anchors.verticalCenter: parent.verticalCenter
                             text: "Type a command or search..."
                             color: root.subtle
                             font.family: root.uiFont
@@ -425,8 +427,8 @@ PanelWindow {
                         Text {
                             visible: root.aiMode && aiInput.text.length === 0
                             anchors.left: aiInput.left
-                            anchors.verticalCenter: aiInput.verticalCenter
-                            text: "Ask AI anything..."
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: "Ask DHH anything..."
                             color: root.subtle
                             font.family: root.uiFont
                             font.pixelSize: 14
@@ -434,7 +436,7 @@ PanelWindow {
                     }
 
                     Rectangle {
-                        width: root.aiMode ? 126 : 92
+                        width: root.aiMode ? 126 : 112
                         height: 34
                         anchors.verticalCenter: parent.verticalCenter
                         radius: 9
@@ -444,14 +446,14 @@ PanelWindow {
                             anchors.centerIn: parent
                             spacing: 7
                             Text {
-                                text: root.aiMode ? "<" : "*"
+                                text: root.aiMode ? "<" : "✦"
                                 color: root.subtle
                                 font.family: root.uiFont
                                 font.pixelSize: 12
                                 font.weight: Font.Bold
                             }
                             Text {
-                                text: root.aiMode ? "Back" : "Ask AI"
+                                text: root.aiMode ? "Back" : "Ask DHH"
                                 color: root.text
                                 font.family: root.uiFont
                                 font.pixelSize: 12
@@ -752,19 +754,74 @@ PanelWindow {
                     anchors.left: parent.left
                     anchors.leftMargin: 20
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 18
+                    spacing: 16
 
-                    Text {
-                        text: "Up/Down Navigate"
-                        color: root.muted
-                        font.family: root.uiFont
-                        font.pixelSize: 11
+                    Row {
+                        spacing: 5
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        Rectangle {
+                            width: 22
+                            height: 22
+                            radius: 6
+                            color: root.panelSoft
+                            Text {
+                                anchors.centerIn: parent
+                                text: "↑"
+                                color: root.muted
+                                font.family: root.uiFont
+                                font.pixelSize: 11
+                            }
+                        }
+
+                        Rectangle {
+                            width: 22
+                            height: 22
+                            radius: 6
+                            color: root.panelSoft
+                            Text {
+                                anchors.centerIn: parent
+                                text: "↓"
+                                color: root.muted
+                                font.family: root.uiFont
+                                font.pixelSize: 11
+                            }
+                        }
+
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: "Navigate"
+                            color: root.muted
+                            font.family: root.uiFont
+                            font.pixelSize: 11
+                        }
                     }
-                    Text {
-                        text: "Enter Open"
-                        color: root.muted
-                        font.family: root.uiFont
-                        font.pixelSize: 11
+
+                    Row {
+                        spacing: 6
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        Rectangle {
+                            width: 24
+                            height: 22
+                            radius: 6
+                            color: root.panelSoft
+                            Text {
+                                anchors.centerIn: parent
+                                text: "↵"
+                                color: root.muted
+                                font.family: root.uiFont
+                                font.pixelSize: 12
+                            }
+                        }
+
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: "Open"
+                            color: root.muted
+                            font.family: root.uiFont
+                            font.pixelSize: 11
+                        }
                     }
                 }
 
