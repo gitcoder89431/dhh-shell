@@ -7,6 +7,6 @@ runtime_dir="$repo_root/.cache"
 runtime_qml="$runtime_dir/shell.qml"
 
 mkdir -p "$runtime_dir"
-sed "s|@PETSHELL_ROOT@|$repo_root|g" "$repo_root/qml/shell.qml" > "$runtime_qml"
+sed "s|@DHH_SHELL_ROOT@|$repo_root|g" "$repo_root/qml/shell.qml" > "$runtime_qml"
 
 exec qs -n -p "$runtime_qml"

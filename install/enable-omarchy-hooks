@@ -10,13 +10,13 @@ install_hook() {
   local event="$2"
   local extra_arg="${3:-}"
   local dir="$hooks_root/$type.d"
-  local path="$dir/petshell-commentary"
+  local path="$dir/dhh-shell-commentary"
 
   mkdir -p "$dir"
   cat > "$path" <<EOF
 #!/usr/bin/env bash
 
-"$repo_root/bin/petshell-omarchy-event" "$event" $extra_arg >/dev/null 2>&1 || true
+"$repo_root/bin/dhh-shell-omarchy-event" "$event" $extra_arg >/dev/null 2>&1 || true
 EOF
   chmod +x "$path"
   printf 'installed %s\n' "$path"

@@ -2,8 +2,8 @@
 set -euo pipefail
 
 autostart="${XDG_CONFIG_HOME:-$HOME/.config}/hypr/autostart.conf"
-begin="# >>> petshell autostart >>>"
-end="# <<< petshell autostart <<<"
+begin="# >>> dhh-shell autostart >>>"
+end="# <<< dhh-shell autostart <<<"
 
 [ -f "$autostart" ] || exit 0
 

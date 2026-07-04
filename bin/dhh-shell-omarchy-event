@@ -2,11 +2,11 @@
 set -euo pipefail
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-notify="$script_dir/petshell-notify"
+notify="$script_dir/dhh-shell-notify"
 
 usage() {
   cat >&2 <<'EOF'
-usage: petshell-omarchy-event EVENT
+usage: dhh-shell-omarchy-event EVENT
 
 events:
   keybindings

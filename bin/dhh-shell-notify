@@ -7,7 +7,7 @@ event_file="$repo_root/config/event.json"
 
 usage() {
   cat >&2 <<'EOF'
-usage: petshell-notify [--state STATE] [--duration MS] MESSAGE
+usage: dhh-shell-notify [--state STATE] [--duration MS] MESSAGE
 
 states: wave, alert, thinking, sad, coding, review, jump
 EOF

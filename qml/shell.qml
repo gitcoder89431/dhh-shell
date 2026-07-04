@@ -6,13 +6,12 @@ import Quickshell.Wayland
 ShellRoot {
     id: shell
 
-    readonly property string repoRoot: "@PETSHELL_ROOT@"
+    readonly property string repoRoot: "@DHH_SHELL_ROOT@"
     readonly property string settingsPath: repoRoot + "/config/settings.json"
     readonly property string eventPath: repoRoot + "/config/event.json"
-    property string activePet: "dhh-pet"
-    property real petScale: 1.0
-    property var petMeta: ({})
-    property var petStates: ({})
+    property real dhhScale: 1.0
+    property var dhhMeta: ({})
+    property var dhhStates: ({})
     property int lastEventId: 0
     property bool eventFilePrimed: false
     property int eventId: 0
@@ -23,35 +22,31 @@ ShellRoot {
     function loadSettings(raw) {
         try {
             const parsed = JSON.parse(raw || "{}");
-            activePet = parsed.activePet || "dhh-pet";
-            petScale = Number(parsed.scale || 1.0);
-            if (!isFinite(petScale) || petScale <= 0) {
-                petScale = 1.0;
+            dhhScale = Number(parsed.scale || 1.0);
+            if (!isFinite(dhhScale) || dhhScale <= 0) {
+                dhhScale = 1.0;
             }
-            petScale = Math.max(0.35, Math.min(2.0, petScale));
+            dhhScale = Math.max(0.35, Math.min(2.0, dhhScale));
         } catch (error) {
-            console.warn("petshell: failed to parse settings:", error);
-            activePet = "dhh-pet";
-            petScale = 1.0;
+            console.warn("dhh-shell: failed to parse settings:", error);
+            dhhScale = 1.0;
         }
-        petFile.path = repoRoot + "/pets/" + activePet + "/pet.json";
-        petFile.reload();
     }
 
-    function loadPet(raw) {
+    function loadDhh(raw) {
         try {
             const parsed = JSON.parse(raw || "{}");
-            petMeta = parsed;
-            petStates = parsed.states || {};
+            dhhMeta = parsed;
+            dhhStates = parsed.states || {};
         } catch (error) {
-            console.warn("petshell: failed to parse pet metadata:", error);
-            petMeta = {};
-            petStates = {};
+            console.warn("dhh-shell: failed to parse DHH metadata:", error);
+            dhhMeta = {};
+            dhhStates = {};
         }
     }
 
     function stateSpec(name) {
-        const states = petStates || {};
+        const states = dhhStates || {};
         let spec = states[name];
         if (spec && spec.fallback && spec.row === undefined) {
             spec = states[spec.fallback];
@@ -88,7 +83,7 @@ ShellRoot {
             eventMessage = message;
             shell.eventId = eventId;
         } catch (error) {
-            console.warn("petshell: failed to parse event:", error);
+            console.warn("dhh-shell: failed to parse event:", error);
         }
     }
 
@@ -99,20 +94,20 @@ ShellRoot {
         onLoaded: shell.loadSettings(text())
         onFileChanged: reload()
         onLoadFailed: function(error) {
-            console.warn("petshell: settings unavailable:", error);
+            console.warn("dhh-shell: settings unavailable:", error);
             shell.loadSettings("{}");
         }
     }
 
     FileView {
-        id: petFile
-        path: shell.repoRoot + "/pets/" + shell.activePet + "/pet.json"
+        id: dhhFile
+        path: shell.repoRoot + "/assets/dhh/dhh.json"
         watchChanges: true
-        onLoaded: shell.loadPet(text())
+        onLoaded: shell.loadDhh(text())
         onFileChanged: reload()
         onLoadFailed: function(error) {
-            console.warn("petshell: pet metadata unavailable:", error);
-            shell.loadPet("{}");
+            console.warn("dhh-shell: DHH metadata unavailable:", error);
+            shell.loadDhh("{}");
         }
     }
 
@@ -131,7 +126,7 @@ ShellRoot {
         model: Quickshell.screens
 
         PanelWindow {
-            id: petWindow
+            id: dhhWindow
             required property var modelData
 
             screen: modelData
@@ -146,17 +141,17 @@ ShellRoot {
             exclusiveZone: 0
             exclusionMode: ExclusionMode.Ignore
             WlrLayershell.layer: WlrLayer.Overlay
-            WlrLayershell.namespace: "petshell"
+            WlrLayershell.namespace: "dhh-shell"
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 
-            property int frameWidth: Number(shell.petMeta.frameWidth || 142)
-            property int frameHeight: Number(shell.petMeta.frameHeight || 154)
-            property int cols: Number(shell.petMeta.cols || 8)
-            property int rows: Number(shell.petMeta.rows || 9)
-            property real petScale: shell.petScale
-            property int petWidth: Math.round(frameWidth * petScale)
-            property int petHeight: Math.round(frameHeight * petScale)
-            property string sheetSource: "file://" + shell.repoRoot + "/pets/" + shell.activePet + "/" + (shell.petMeta.spritesheetPath || "spritesheet.png")
+            property int frameWidth: Number(shell.dhhMeta.frameWidth || 142)
+            property int frameHeight: Number(shell.dhhMeta.frameHeight || 154)
+            property int cols: Number(shell.dhhMeta.cols || 8)
+            property int rows: Number(shell.dhhMeta.rows || 9)
+            property real dhhScale: shell.dhhScale
+            property int dhhWidth: Math.round(frameWidth * dhhScale)
+            property int dhhHeight: Math.round(frameHeight * dhhScale)
+            property string sheetSource: "file://" + shell.repoRoot + "/assets/dhh/" + (shell.dhhMeta.spritesheetPath || "spritesheet.png")
             property int frame: 0
             property int frameIndex: 0
             property var frameList: []
@@ -173,9 +168,9 @@ ShellRoot {
             property int handledEventId: 0
             property int bubbleMaxWidth: Math.max(180, Math.min(360, width - 32))
 
-            function clampPet() {
-                petHitbox.x = Math.max(0, Math.min(width - petWidth, petHitbox.x));
-                petHitbox.y = Math.max(0, Math.min(height - petHeight, petHitbox.y));
+            function clampDhh() {
+                dhhHitbox.x = Math.max(0, Math.min(width - dhhWidth, dhhHitbox.x));
+                dhhHitbox.y = Math.max(0, Math.min(height - dhhHeight, dhhHitbox.y));
             }
 
             function setState(name, shouldAnimate) {
@@ -217,7 +212,7 @@ ShellRoot {
                     systemRule = snapshot.rule || "default";
                     applySystemState();
                 } catch (error) {
-                    console.warn("petshell: failed to parse system state:", error);
+                    console.warn("dhh-shell: failed to parse system state:", error);
                 }
             }
 
@@ -232,17 +227,17 @@ ShellRoot {
             }
 
             mask: Region {
-                item: petHitbox
+                item: dhhHitbox
             }
 
             Connections {
                 target: shell
                 function onEventIdChanged() {
-                    if (shell.eventId <= 0 || shell.eventId === petWindow.handledEventId) {
+                    if (shell.eventId <= 0 || shell.eventId === dhhWindow.handledEventId) {
                         return;
                     }
-                    petWindow.handledEventId = shell.eventId;
-                    petWindow.showEventBubble(shell.eventMessage, shell.eventState, shell.eventDuration);
+                    dhhWindow.handledEventId = shell.eventId;
+                    dhhWindow.showEventBubble(shell.eventMessage, shell.eventState, shell.eventDuration);
                 }
             }
 
@@ -250,13 +245,13 @@ ShellRoot {
                 id: frameTimer
                 running: true
                 repeat: true
-                interval: Math.round(1000 / petWindow.fps)
+                interval: Math.round(1000 / dhhWindow.fps)
                 onTriggered: {
-                    if (petWindow.frameList.length > 0) {
-                        petWindow.frameIndex = (petWindow.frameIndex + 1) % petWindow.frameList.length;
-                        petWindow.frame = Number(petWindow.frameList[petWindow.frameIndex] || 0);
-                    } else if (petWindow.animated) {
-                        petWindow.frame = (petWindow.frame + 1) % petWindow.cols;
+                    if (dhhWindow.frameList.length > 0) {
+                        dhhWindow.frameIndex = (dhhWindow.frameIndex + 1) % dhhWindow.frameList.length;
+                        dhhWindow.frame = Number(dhhWindow.frameList[dhhWindow.frameIndex] || 0);
+                    } else if (dhhWindow.animated) {
+                        dhhWindow.frame = (dhhWindow.frame + 1) % dhhWindow.cols;
                     }
                 }
             }
@@ -265,7 +260,7 @@ ShellRoot {
                 id: bubbleTimer
                 interval: 1800
                 repeat: false
-                onTriggered: petWindow.bubbleText = ""
+                onTriggered: dhhWindow.bubbleText = ""
             }
 
             Timer {
@@ -273,21 +268,21 @@ ShellRoot {
                 interval: 1400
                 repeat: false
                 onTriggered: {
-                    petWindow.transientState = false;
-                    petWindow.applySystemState();
+                    dhhWindow.transientState = false;
+                    dhhWindow.applySystemState();
                 }
             }
 
             Process {
                 id: systemProbe
-                command: [shell.repoRoot + "/bin/petshell-system-state"]
+                command: [shell.repoRoot + "/bin/dhh-shell-system-state"]
                 stdout: StdioCollector {
                     id: systemProbeOut
                     waitForEnd: true
                 }
                 onExited: function(exitCode) {
                     if (exitCode === 0) {
-                        petWindow.applySystemSnapshot(systemProbeOut.text);
+                        dhhWindow.applySystemSnapshot(systemProbeOut.text);
                     }
                 }
             }
@@ -305,19 +300,19 @@ ShellRoot {
             }
 
             Item {
-                id: petHitbox
-                x: Math.max(16, petWindow.width - petWindow.petWidth - 72)
-                y: Math.max(48, petWindow.height - petWindow.petHeight - 52)
-                width: petWindow.petWidth
-                height: petWindow.petHeight
+                id: dhhHitbox
+                x: Math.max(16, dhhWindow.width - dhhWindow.dhhWidth - 72)
+                y: Math.max(48, dhhWindow.height - dhhWindow.dhhHeight - 52)
+                width: dhhWindow.dhhWidth
+                height: dhhWindow.dhhHeight
 
                 Behavior on x {
-                    enabled: !petWindow.dragging
+                    enabled: !dhhWindow.dragging
                     NumberAnimation { duration: 160; easing.type: Easing.OutCubic }
                 }
 
                 Behavior on y {
-                    enabled: !petWindow.dragging
+                    enabled: !dhhWindow.dragging
                     NumberAnimation { duration: 160; easing.type: Easing.OutCubic }
                 }
 
@@ -327,21 +322,21 @@ ShellRoot {
                     clip: true
 
                     Image {
-                        source: petWindow.sheetSource
-                        width: petWindow.frameWidth * petWindow.cols * petWindow.petScale
-                        height: petWindow.frameHeight * petWindow.rows * petWindow.petScale
-                        x: -petWindow.frame * petWindow.petWidth
-                        y: -petWindow.stateRow * petWindow.petHeight
+                        source: dhhWindow.sheetSource
+                        width: dhhWindow.frameWidth * dhhWindow.cols * dhhWindow.dhhScale
+                        height: dhhWindow.frameHeight * dhhWindow.rows * dhhWindow.dhhScale
+                        x: -dhhWindow.frame * dhhWindow.dhhWidth
+                        y: -dhhWindow.stateRow * dhhWindow.dhhHeight
                         smooth: false
                         cache: true
                     }
                 }
 
                 Rectangle {
-                    visible: petWindow.bubbleText.length > 0
-                    x: Math.max(12 - petHitbox.x, Math.min((petWindow.width - width - 12) - petHitbox.x, (petHitbox.width - width) / 2))
+                    visible: dhhWindow.bubbleText.length > 0
+                    x: Math.max(12 - dhhHitbox.x, Math.min((dhhWindow.width - width - 12) - dhhHitbox.x, (dhhHitbox.width - width) / 2))
                     y: -height + 6
-                    width: Math.min(petWindow.bubbleMaxWidth, Math.max(150, bubbleLabel.implicitWidth + 24))
+                    width: Math.min(dhhWindow.bubbleMaxWidth, Math.max(150, bubbleLabel.implicitWidth + 24))
                     height: bubbleLabel.implicitHeight + 16
                     radius: 14
                     color: Qt.rgba(0.07, 0.07, 0.10, 0.92)
@@ -352,7 +347,7 @@ ShellRoot {
                         id: bubbleLabel
                         anchors.centerIn: parent
                         width: parent.width - 24
-                        text: petWindow.bubbleText
+                        text: dhhWindow.bubbleText
                         color: "#f5e0dc"
                         font.family: "JetBrainsMono Nerd Font"
                         font.pixelSize: 11
@@ -367,51 +362,51 @@ ShellRoot {
                     anchors.fill: parent
                     acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
                     cursorShape: dragging ? Qt.ClosedHandCursor : Qt.OpenHandCursor
-                    drag.target: petHitbox
+                    drag.target: dhhHitbox
                     drag.axis: Drag.XAndYAxis
                     drag.minimumX: 0
-                    drag.maximumX: Math.max(0, petWindow.width - petWindow.petWidth)
+                    drag.maximumX: Math.max(0, dhhWindow.width - dhhWindow.dhhWidth)
                     drag.minimumY: 0
-                    drag.maximumY: Math.max(0, petWindow.height - petWindow.petHeight)
+                    drag.maximumY: Math.max(0, dhhWindow.height - dhhWindow.dhhHeight)
 
                     onPressed: function(mouse) {
                         if (mouse.button === Qt.LeftButton) {
-                            petWindow.dragging = true;
-                            petWindow.transientState = true;
-                            petWindow.dragLastX = petHitbox.x;
+                            dhhWindow.dragging = true;
+                            dhhWindow.transientState = true;
+                            dhhWindow.dragLastX = dhhHitbox.x;
                         }
                     }
 
                     onPositionChanged: {
-                        if (!petWindow.dragging) {
+                        if (!dhhWindow.dragging) {
                             return;
                         }
 
-                        const dx = petHitbox.x - petWindow.dragLastX;
-                        petWindow.clampPet();
+                        const dx = dhhHitbox.x - dhhWindow.dragLastX;
+                        dhhWindow.clampDhh();
                         if (Math.abs(dx) > 1) {
-                            petWindow.setState(dx < 0 ? "walk_left" : "walk_right", true);
-                            petWindow.dragLastX = petHitbox.x;
+                            dhhWindow.setState(dx < 0 ? "walk_left" : "walk_right", true);
+                            dhhWindow.dragLastX = dhhHitbox.x;
                         }
                     }
 
                     onReleased: {
-                        petWindow.dragging = false;
-                        petWindow.transientState = false;
-                        petWindow.applySystemState();
+                        dhhWindow.dragging = false;
+                        dhhWindow.transientState = false;
+                        dhhWindow.applySystemState();
                     }
 
                     onClicked: function(mouse) {
                         if (mouse.button === Qt.RightButton) {
-                            petWindow.bubbleText = petWindow.systemSummary || "petshell";
+                            dhhWindow.bubbleText = dhhWindow.systemSummary || "dhh-shell";
                             bubbleTimer.restart();
-                            petWindow.transientState = true;
-                            petWindow.setState("wave", true);
+                            dhhWindow.transientState = true;
+                            dhhWindow.setState("wave", true);
                             transientTimer.restart();
                         } else if (mouse.button === Qt.MiddleButton) {
-                            petHitbox.x = Math.max(16, petWindow.width - petWindow.petWidth - 72);
-                            petHitbox.y = Math.max(48, petWindow.height - petWindow.petHeight - 52);
-                            petWindow.applySystemState();
+                            dhhHitbox.x = Math.max(16, dhhWindow.width - dhhWindow.dhhWidth - 72);
+                            dhhHitbox.y = Math.max(48, dhhWindow.height - dhhWindow.dhhHeight - 52);
+                            dhhWindow.applySystemState();
                         }
                     }
                 }

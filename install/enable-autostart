@@ -4,8 +4,8 @@ set -euo pipefail
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd -- "$script_dir/.." && pwd)"
 autostart="${XDG_CONFIG_HOME:-$HOME/.config}/hypr/autostart.conf"
-begin="# >>> petshell autostart >>>"
-end="# <<< petshell autostart <<<"
+begin="# >>> dhh-shell autostart >>>"
+end="# <<< dhh-shell autostart <<<"
 
 mkdir -p "$(dirname "$autostart")"
 touch "$autostart"
@@ -20,7 +20,7 @@ awk -v begin="$begin" -v end="$end" '
 cat >> "$tmp" <<EOF
 
 $begin
-exec-once = $repo_root/bin/petshell-dev
+exec-once = $repo_root/bin/dhh-shell-dev
 $end
 EOF
 

@@ -1,19 +1,21 @@
-# Petshell
+# DHH Shell
 
-A tiny Quickshell desktop pet overlay for Omarchy/Hyprland.
+An opinionated Quickshell desktop gremlin for Omarchy.
 
-The current base is a DHH-inspired sprite pet with draggable movement, system-state reactions, and a small event bridge for demo bubbles.
+DHH Shell is intentionally not a general framework. It ships one DHH-inspired sprite, sits on your Hyprland desktop, reacts to Omarchy actions, and drops short Unix-prophet commentary while you work.
 
 ## Requirements
 
-- Omarchy or another Hyprland setup with Quickshell available as `qs`
+- Omarchy, or a Hyprland setup close enough to Omarchy
+- Quickshell available as `qs`
 - `jq`
-- ImageMagick, only needed for rebuilding sprite variants
+
+Omarchy already provides most of the surrounding pieces this integrates with: Hyprland bindings, Omarchy hooks, Mako notifications, menus, and system helpers.
 
 ## Run
 
 ```bash
-./bin/petshell-dev
+./bin/dhh-shell-dev
 ```
 
 Stop the running shell:
@@ -22,16 +24,16 @@ Stop the running shell:
 qs kill -p "$(pwd)/.cache/shell.qml"
 ```
 
-`petshell-dev` generates `.cache/shell.qml` from `qml/shell.qml` with the current repo path. That keeps the checked-in QML portable.
+`dhh-shell-dev` generates `.cache/shell.qml` from `qml/shell.qml` with the current repo path. That keeps the checked-in QML portable.
 
 ## Optional Install
 
 Clone wherever you keep dotfiles or local tools:
 
 ```bash
-git clone <repo-url> ~/.config/petshell
-cd ~/.config/petshell
-./bin/petshell-dev
+git clone <repo-url> ~/.config/dhh-shell
+cd ~/.config/dhh-shell
+./bin/dhh-shell-dev
 ```
 
 Enable optional integrations explicitly:
@@ -68,50 +70,50 @@ The install scripts only write marked user-config blocks/files under `~/.config`
 
 ## Controls
 
-- Left-drag the pet to move it around.
-- Right-click the pet to show CPU/RAM/battery status.
-- Middle-click the pet to reset it to the bottom-right.
+- Left-drag DHH to move him around.
+- Right-click DHH to show CPU/RAM/battery status.
+- Middle-click DHH to reset him to the bottom-right.
 
-## Events
+## Commentary
 
 Send a message bubble and play an animation:
 
 ```bash
-./bin/petshell-notify --state wave "DHH online"
+./bin/dhh-shell-notify --state wave "DHH online"
 ```
 
 Send an opinionated Omarchy/desktop event:
 
 ```bash
-./bin/petshell-omarchy-event keybindings
-./bin/petshell-omarchy-event screenshot
-./bin/petshell-omarchy-event capture-menu
-./bin/petshell-omarchy-event recording-start
-./bin/petshell-omarchy-event recording-stop
-./bin/petshell-omarchy-event system-menu
-./bin/petshell-omarchy-event theme-menu
-./bin/petshell-omarchy-event background-menu
-./bin/petshell-omarchy-event update
-./bin/petshell-omarchy-event update-done
-./bin/petshell-omarchy-event theme-set mocha_v2
-./bin/petshell-omarchy-event font-set "TX-02"
-./bin/petshell-omarchy-event battery-low 17
-./bin/petshell-omarchy-event post-boot
-./bin/petshell-omarchy-event launcher
-./bin/petshell-omarchy-event activity
+./bin/dhh-shell-omarchy-event keybindings
+./bin/dhh-shell-omarchy-event screenshot
+./bin/dhh-shell-omarchy-event capture-menu
+./bin/dhh-shell-omarchy-event recording-start
+./bin/dhh-shell-omarchy-event recording-stop
+./bin/dhh-shell-omarchy-event system-menu
+./bin/dhh-shell-omarchy-event theme-menu
+./bin/dhh-shell-omarchy-event background-menu
+./bin/dhh-shell-omarchy-event update
+./bin/dhh-shell-omarchy-event update-done
+./bin/dhh-shell-omarchy-event theme-set mocha_v2
+./bin/dhh-shell-omarchy-event font-set "TX-02"
+./bin/dhh-shell-omarchy-event battery-low 17
+./bin/dhh-shell-omarchy-event post-boot
+./bin/dhh-shell-omarchy-event launcher
+./bin/dhh-shell-omarchy-event activity
 ```
 
 Useful Omarchy hooks for automatic commentary:
 
 ```text
-~/.config/omarchy/hooks/post-update.d/petshell-commentary
-~/.config/omarchy/hooks/theme-set.d/petshell-commentary
-~/.config/omarchy/hooks/font-set.d/petshell-commentary
-~/.config/omarchy/hooks/battery-low.d/petshell-commentary
-~/.config/omarchy/hooks/post-boot.d/petshell-commentary
+~/.config/omarchy/hooks/post-update.d/dhh-shell-commentary
+~/.config/omarchy/hooks/theme-set.d/dhh-shell-commentary
+~/.config/omarchy/hooks/font-set.d/dhh-shell-commentary
+~/.config/omarchy/hooks/battery-low.d/dhh-shell-commentary
+~/.config/omarchy/hooks/post-boot.d/dhh-shell-commentary
 ```
 
-Available states:
+Available animation states:
 
 ```text
 wave alert thinking sad coding review jump
@@ -121,38 +123,14 @@ Quick demo:
 
 ```bash
 for state in wave thinking review jump sad alert; do
-  ./bin/petshell-notify --state "$state" --duration 1800 "demo: $state"
+  ./bin/dhh-shell-notify --state "$state" --duration 1800 "demo: $state"
   sleep 2
 done
 ```
 
-## Pet Variants
-
-List variants:
-
-```bash
-./bin/petshell-pet list
-```
-
-Switch active pet:
-
-```bash
-./bin/petshell-pet set dhh-pet
-./bin/petshell-pet set dhh-hybrid
-./bin/petshell-pet set dhh-v1-laptop
-./bin/petshell-pet set dhh-v2
-```
-
-Current variants:
-
-- `dhh-pet`: active alias, currently the same sprite as `dhh-hybrid`.
-- `dhh-hybrid`: v1 laptop sprite set, with only row 6 `waiting` and row 8 `review` replaced from v2.
-- `dhh-v1-laptop`: original DHH laptop sprite set.
-- `dhh-v2`: no-laptop sprite set.
-
 ## Sprite Layout
 
-All DHH sheets use:
+The bundled DHH sheet uses:
 
 - `1536x1872` spritesheet
 - `8` columns by `9` rows
@@ -172,14 +150,8 @@ Rows:
 8 review/coding
 ```
 
-The hybrid sheet is built by appending full rows instead of alpha-compositing. This matters because compositing transparent rows can leave hidden pixels from the previous row and cause visual overlap.
-
-Rebuild the hybrid:
-
-```bash
-./scripts/build-dhh-hybrid
-```
+The runtime asset lives in `assets/dhh/`. Users do not need generation tools or source references.
 
 ## Git Hygiene
 
-`references/` is ignored because it contains bulky generation inputs, prompts, decoded frames, and QA intermediates. Runtime pet assets live under `pets/` and are tracked.
+`references/` is ignored because it contains bulky generation inputs, prompts, decoded frames, and QA intermediates. Runtime assets live under `assets/dhh/` and are tracked.

@@ -1,7 +1,7 @@
 {
-  "id": "dhh-hybrid",
-  "displayName": "DHH Hybrid",
-  "description": "DHH v1 laptop sprite set with only v2 waiting and review rows.",
+  "id": "dhh",
+  "displayName": "DHH",
+  "description": "DHH shell gremlin for Omarchy commentary.",
   "spritesheetPath": "spritesheet.png",
   "cols": 8,
   "rows": 9,

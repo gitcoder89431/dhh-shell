@@ -2,8 +2,8 @@
 set -euo pipefail
 
 bindings="${XDG_CONFIG_HOME:-$HOME/.config}/hypr/bindings.conf"
-begin="# >>> petshell commentary bindings >>>"
-end="# <<< petshell commentary bindings <<<"
+begin="# >>> dhh-shell commentary bindings >>>"
+end="# <<< dhh-shell commentary bindings <<<"
 
 [ -f "$bindings" ] || exit 0
 
